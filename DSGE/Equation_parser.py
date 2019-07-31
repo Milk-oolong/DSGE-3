@@ -43,7 +43,7 @@ class Parser:
 
 
 
-class Calc(Parser):
+class Econ_model_parser(Parser):
 
     tokens = (
         'NAME', 'INTEGER', 'FLOAT',
@@ -69,6 +69,9 @@ class Calc(Parser):
 
     def get_parameters(self):
         return {p for p,f in self.variables.items() if f is None}
+
+    def get_end_of_chain_variables(self):
+        return {v: self.variables[v] for v in self.end_of_chain_variables}
 
     def t_FLOAT(self, t):
         '(\d*[.])?\d+'
@@ -103,13 +106,13 @@ class Calc(Parser):
     def p_statement(self,p):
         """statement : NAME EQUALS atom"""
         #Get dependencies
-        dependencies = get_dependencies(p[3])
-        
+        dependencies = get_dependencies(p[3],[])
+        if p[1] not in self.variables.keys():
+            self.end_of_chain_variables.add(p[1])
         self.variables[p[1]] = {
             'function': p[3],
-            'dependencies': dependencies
+            'dependencies': dependencies.copy()
         }
-        self.end_of_chain_variables.add(p[1])
         for d in dependencies:
             if d not in self.variables.keys():
                 self.variables[d] = None
@@ -224,26 +227,3 @@ class Calc(Parser):
             print("Syntax error at EOF")
 
 
-class Equation:
-
-    def __init__(self,fun,deps):
-        self.fun = fun
-        self.deps = deps
-        self.value = None
-
-    def __call__(self):
-        for dep in self.deps:
-            dep()
-        args = [dep.value for dep in self.deps]
-        self.value = self.fun(*args)
-        return self.value
-
-
-class Parameter:
-
-    def __init__(self,val):
-        self.value = val
-
-    def __call__(self):
-        pass
-    

@@ -1,0 +1,1726 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> statement
+Rule 1     statement -> NAME EQUALS atom
+Rule 2     arglist -> arglist COMMA NAME
+Rule 3     arglist -> arglist COMMA number
+Rule 4     arglist -> number
+Rule 5     arglist -> NAME
+Rule 6     parameters -> LPAREN RPAREN
+Rule 7     parameters -> LPAREN arglist RPAREN
+Rule 8     function -> NAME parameters
+Rule 9     number -> INTEGER
+Rule 10    number -> FLOAT
+Rule 11    number -> number PLUS number
+Rule 12    number -> number MINUS number
+Rule 13    number -> number TIMES number
+Rule 14    number -> number DIVIDE number
+Rule 15    number -> number EXP number
+Rule 16    atom -> atom PLUS atom
+Rule 17    atom -> atom MINUS atom
+Rule 18    atom -> atom TIMES atom
+Rule 19    atom -> atom DIVIDE atom
+Rule 20    atom -> atom EXP atom
+Rule 21    atom -> number PLUS atom
+Rule 22    atom -> number MINUS atom
+Rule 23    atom -> number TIMES atom
+Rule 24    atom -> number DIVIDE atom
+Rule 25    atom -> number EXP atom
+Rule 26    number -> MINUS number
+Rule 27    number -> LPAREN number RPAREN
+Rule 28    atom -> LPAREN atom RPAREN
+Rule 29    variable -> NAME
+Rule 30    atom -> number
+Rule 31    atom -> variable
+Rule 32    atom -> function
+
+Terminals, with rules where they appear
+
+COMMA                : 2 3
+DIVIDE               : 14 19 24
+EQUALS               : 1
+EXP                  : 15 20 25
+FLOAT                : 10
+INTEGER              : 9
+LPAREN               : 6 7 27 28
+MINUS                : 12 17 22 26
+NAME                 : 1 2 5 8 29
+PLUS                 : 11 16 21
+RPAREN               : 6 7 27 28
+TIMES                : 13 18 23
+error                : 
+
+Nonterminals, with rules where they appear
+
+arglist              : 2 3 7
+atom                 : 1 16 16 17 17 18 18 19 19 20 20 21 22 23 24 25 28
+function             : 32
+number               : 3 4 11 11 12 12 13 13 14 14 15 15 21 22 23 24 25 26 27 30
+parameters           : 8
+statement            : 0
+variable             : 31
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . statement
+    (1) statement -> . NAME EQUALS atom
+
+    NAME            shift and go to state 2
+
+    statement                      shift and go to state 1
+
+state 1
+
+    (0) S' -> statement .
+
+
+
+state 2
+
+    (1) statement -> NAME . EQUALS atom
+
+    EQUALS          shift and go to state 3
+
+
+state 3
+
+    (1) statement -> NAME EQUALS . atom
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 5
+    number                         shift and go to state 7
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 4
+
+    (29) variable -> NAME .
+    (8) function -> NAME . parameters
+    (6) parameters -> . LPAREN RPAREN
+    (7) parameters -> . LPAREN arglist RPAREN
+
+    PLUS            reduce using rule 29 (variable -> NAME .)
+    MINUS           reduce using rule 29 (variable -> NAME .)
+    TIMES           reduce using rule 29 (variable -> NAME .)
+    DIVIDE          reduce using rule 29 (variable -> NAME .)
+    EXP             reduce using rule 29 (variable -> NAME .)
+    $end            reduce using rule 29 (variable -> NAME .)
+    RPAREN          reduce using rule 29 (variable -> NAME .)
+    LPAREN          shift and go to state 14
+
+    parameters                     shift and go to state 13
+
+state 5
+
+    (1) statement -> NAME EQUALS atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    $end            reduce using rule 1 (statement -> NAME EQUALS atom .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    EXP             shift and go to state 19
+
+
+state 6
+
+    (26) number -> MINUS . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 20
+
+state 7
+
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for EXP resolved as shift
+    PLUS            shift and go to state 22
+    MINUS           shift and go to state 23
+    TIMES           shift and go to state 24
+    DIVIDE          shift and go to state 25
+    EXP             shift and go to state 26
+    $end            reduce using rule 30 (atom -> number .)
+    RPAREN          reduce using rule 30 (atom -> number .)
+
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+
+
+state 8
+
+    (28) atom -> LPAREN . atom RPAREN
+    (27) number -> LPAREN . number RPAREN
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 27
+    number                         shift and go to state 28
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 9
+
+    (31) atom -> variable .
+
+    PLUS            reduce using rule 31 (atom -> variable .)
+    MINUS           reduce using rule 31 (atom -> variable .)
+    TIMES           reduce using rule 31 (atom -> variable .)
+    DIVIDE          reduce using rule 31 (atom -> variable .)
+    EXP             reduce using rule 31 (atom -> variable .)
+    $end            reduce using rule 31 (atom -> variable .)
+    RPAREN          reduce using rule 31 (atom -> variable .)
+
+
+state 10
+
+    (32) atom -> function .
+
+    PLUS            reduce using rule 32 (atom -> function .)
+    MINUS           reduce using rule 32 (atom -> function .)
+    TIMES           reduce using rule 32 (atom -> function .)
+    DIVIDE          reduce using rule 32 (atom -> function .)
+    EXP             reduce using rule 32 (atom -> function .)
+    $end            reduce using rule 32 (atom -> function .)
+    RPAREN          reduce using rule 32 (atom -> function .)
+
+
+state 11
+
+    (9) number -> INTEGER .
+
+    PLUS            reduce using rule 9 (number -> INTEGER .)
+    MINUS           reduce using rule 9 (number -> INTEGER .)
+    TIMES           reduce using rule 9 (number -> INTEGER .)
+    DIVIDE          reduce using rule 9 (number -> INTEGER .)
+    EXP             reduce using rule 9 (number -> INTEGER .)
+    $end            reduce using rule 9 (number -> INTEGER .)
+    RPAREN          reduce using rule 9 (number -> INTEGER .)
+    COMMA           reduce using rule 9 (number -> INTEGER .)
+
+
+state 12
+
+    (10) number -> FLOAT .
+
+    PLUS            reduce using rule 10 (number -> FLOAT .)
+    MINUS           reduce using rule 10 (number -> FLOAT .)
+    TIMES           reduce using rule 10 (number -> FLOAT .)
+    DIVIDE          reduce using rule 10 (number -> FLOAT .)
+    EXP             reduce using rule 10 (number -> FLOAT .)
+    $end            reduce using rule 10 (number -> FLOAT .)
+    RPAREN          reduce using rule 10 (number -> FLOAT .)
+    COMMA           reduce using rule 10 (number -> FLOAT .)
+
+
+state 13
+
+    (8) function -> NAME parameters .
+
+    PLUS            reduce using rule 8 (function -> NAME parameters .)
+    MINUS           reduce using rule 8 (function -> NAME parameters .)
+    TIMES           reduce using rule 8 (function -> NAME parameters .)
+    DIVIDE          reduce using rule 8 (function -> NAME parameters .)
+    EXP             reduce using rule 8 (function -> NAME parameters .)
+    $end            reduce using rule 8 (function -> NAME parameters .)
+    RPAREN          reduce using rule 8 (function -> NAME parameters .)
+
+
+state 14
+
+    (6) parameters -> LPAREN . RPAREN
+    (7) parameters -> LPAREN . arglist RPAREN
+    (2) arglist -> . arglist COMMA NAME
+    (3) arglist -> . arglist COMMA number
+    (4) arglist -> . number
+    (5) arglist -> . NAME
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    RPAREN          shift and go to state 29
+    NAME            shift and go to state 31
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    arglist                        shift and go to state 30
+    number                         shift and go to state 32
+
+state 15
+
+    (16) atom -> atom PLUS . atom
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 33
+    number                         shift and go to state 7
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 16
+
+    (17) atom -> atom MINUS . atom
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 34
+    number                         shift and go to state 7
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 17
+
+    (18) atom -> atom TIMES . atom
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 35
+    number                         shift and go to state 7
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 18
+
+    (19) atom -> atom DIVIDE . atom
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 36
+    number                         shift and go to state 7
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 19
+
+    (20) atom -> atom EXP . atom
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    atom                           shift and go to state 37
+    number                         shift and go to state 7
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 20
+
+    (26) number -> MINUS number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    PLUS            reduce using rule 26 (number -> MINUS number .)
+    MINUS           reduce using rule 26 (number -> MINUS number .)
+    TIMES           reduce using rule 26 (number -> MINUS number .)
+    DIVIDE          reduce using rule 26 (number -> MINUS number .)
+    EXP             reduce using rule 26 (number -> MINUS number .)
+    $end            reduce using rule 26 (number -> MINUS number .)
+    RPAREN          reduce using rule 26 (number -> MINUS number .)
+    COMMA           reduce using rule 26 (number -> MINUS number .)
+
+  ! PLUS            [ shift and go to state 39 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! TIMES           [ shift and go to state 40 ]
+  ! DIVIDE          [ shift and go to state 41 ]
+  ! EXP             [ shift and go to state 42 ]
+
+
+state 21
+
+    (27) number -> LPAREN . number RPAREN
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 43
+
+state 22
+
+    (21) atom -> number PLUS . atom
+    (11) number -> number PLUS . number
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    number                         shift and go to state 44
+    atom                           shift and go to state 45
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 23
+
+    (22) atom -> number MINUS . atom
+    (12) number -> number MINUS . number
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    number                         shift and go to state 46
+    atom                           shift and go to state 47
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 24
+
+    (23) atom -> number TIMES . atom
+    (13) number -> number TIMES . number
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    number                         shift and go to state 48
+    atom                           shift and go to state 49
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 25
+
+    (24) atom -> number DIVIDE . atom
+    (14) number -> number DIVIDE . number
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    number                         shift and go to state 50
+    atom                           shift and go to state 51
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 26
+
+    (25) atom -> number EXP . atom
+    (15) number -> number EXP . number
+    (16) atom -> . atom PLUS atom
+    (17) atom -> . atom MINUS atom
+    (18) atom -> . atom TIMES atom
+    (19) atom -> . atom DIVIDE atom
+    (20) atom -> . atom EXP atom
+    (21) atom -> . number PLUS atom
+    (22) atom -> . number MINUS atom
+    (23) atom -> . number TIMES atom
+    (24) atom -> . number DIVIDE atom
+    (25) atom -> . number EXP atom
+    (28) atom -> . LPAREN atom RPAREN
+    (30) atom -> . number
+    (31) atom -> . variable
+    (32) atom -> . function
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+    (29) variable -> . NAME
+    (8) function -> . NAME parameters
+
+    LPAREN          shift and go to state 8
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    NAME            shift and go to state 4
+
+    number                         shift and go to state 52
+    atom                           shift and go to state 53
+    variable                       shift and go to state 9
+    function                       shift and go to state 10
+
+state 27
+
+    (28) atom -> LPAREN atom . RPAREN
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    RPAREN          shift and go to state 54
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    EXP             shift and go to state 19
+
+
+state 28
+
+    (27) number -> LPAREN number . RPAREN
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for EXP resolved as shift
+    RPAREN          shift and go to state 55
+    PLUS            shift and go to state 22
+    MINUS           shift and go to state 23
+    TIMES           shift and go to state 24
+    DIVIDE          shift and go to state 25
+    EXP             shift and go to state 26
+
+  ! RPAREN          [ reduce using rule 30 (atom -> number .) ]
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+
+
+state 29
+
+    (6) parameters -> LPAREN RPAREN .
+
+    PLUS            reduce using rule 6 (parameters -> LPAREN RPAREN .)
+    MINUS           reduce using rule 6 (parameters -> LPAREN RPAREN .)
+    TIMES           reduce using rule 6 (parameters -> LPAREN RPAREN .)
+    DIVIDE          reduce using rule 6 (parameters -> LPAREN RPAREN .)
+    EXP             reduce using rule 6 (parameters -> LPAREN RPAREN .)
+    $end            reduce using rule 6 (parameters -> LPAREN RPAREN .)
+    RPAREN          reduce using rule 6 (parameters -> LPAREN RPAREN .)
+
+
+state 30
+
+    (7) parameters -> LPAREN arglist . RPAREN
+    (2) arglist -> arglist . COMMA NAME
+    (3) arglist -> arglist . COMMA number
+
+    RPAREN          shift and go to state 56
+    COMMA           shift and go to state 57
+
+
+state 31
+
+    (5) arglist -> NAME .
+
+    RPAREN          reduce using rule 5 (arglist -> NAME .)
+    COMMA           reduce using rule 5 (arglist -> NAME .)
+
+
+state 32
+
+    (4) arglist -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    RPAREN          reduce using rule 4 (arglist -> number .)
+    COMMA           reduce using rule 4 (arglist -> number .)
+    PLUS            shift and go to state 39
+    MINUS           shift and go to state 38
+    TIMES           shift and go to state 40
+    DIVIDE          shift and go to state 41
+    EXP             shift and go to state 42
+
+
+state 33
+
+    (16) atom -> atom PLUS atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 16 (atom -> atom PLUS atom .)
+    MINUS           reduce using rule 16 (atom -> atom PLUS atom .)
+    $end            reduce using rule 16 (atom -> atom PLUS atom .)
+    RPAREN          reduce using rule 16 (atom -> atom PLUS atom .)
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    EXP             shift and go to state 19
+
+  ! TIMES           [ reduce using rule 16 (atom -> atom PLUS atom .) ]
+  ! DIVIDE          [ reduce using rule 16 (atom -> atom PLUS atom .) ]
+  ! EXP             [ reduce using rule 16 (atom -> atom PLUS atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+
+
+state 34
+
+    (17) atom -> atom MINUS atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 17 (atom -> atom MINUS atom .)
+    MINUS           reduce using rule 17 (atom -> atom MINUS atom .)
+    $end            reduce using rule 17 (atom -> atom MINUS atom .)
+    RPAREN          reduce using rule 17 (atom -> atom MINUS atom .)
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    EXP             shift and go to state 19
+
+  ! TIMES           [ reduce using rule 17 (atom -> atom MINUS atom .) ]
+  ! DIVIDE          [ reduce using rule 17 (atom -> atom MINUS atom .) ]
+  ! EXP             [ reduce using rule 17 (atom -> atom MINUS atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+
+
+state 35
+
+    (18) atom -> atom TIMES atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 18 (atom -> atom TIMES atom .)
+    MINUS           reduce using rule 18 (atom -> atom TIMES atom .)
+    TIMES           reduce using rule 18 (atom -> atom TIMES atom .)
+    DIVIDE          reduce using rule 18 (atom -> atom TIMES atom .)
+    $end            reduce using rule 18 (atom -> atom TIMES atom .)
+    RPAREN          reduce using rule 18 (atom -> atom TIMES atom .)
+    EXP             shift and go to state 19
+
+  ! EXP             [ reduce using rule 18 (atom -> atom TIMES atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+
+
+state 36
+
+    (19) atom -> atom DIVIDE atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 19 (atom -> atom DIVIDE atom .)
+    MINUS           reduce using rule 19 (atom -> atom DIVIDE atom .)
+    TIMES           reduce using rule 19 (atom -> atom DIVIDE atom .)
+    DIVIDE          reduce using rule 19 (atom -> atom DIVIDE atom .)
+    $end            reduce using rule 19 (atom -> atom DIVIDE atom .)
+    RPAREN          reduce using rule 19 (atom -> atom DIVIDE atom .)
+    EXP             shift and go to state 19
+
+  ! EXP             [ reduce using rule 19 (atom -> atom DIVIDE atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+
+
+state 37
+
+    (20) atom -> atom EXP atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 20 (atom -> atom EXP atom .)
+    MINUS           reduce using rule 20 (atom -> atom EXP atom .)
+    TIMES           reduce using rule 20 (atom -> atom EXP atom .)
+    DIVIDE          reduce using rule 20 (atom -> atom EXP atom .)
+    EXP             reduce using rule 20 (atom -> atom EXP atom .)
+    $end            reduce using rule 20 (atom -> atom EXP atom .)
+    RPAREN          reduce using rule 20 (atom -> atom EXP atom .)
+
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! EXP             [ shift and go to state 19 ]
+
+
+state 38
+
+    (12) number -> number MINUS . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 58
+
+state 39
+
+    (11) number -> number PLUS . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 59
+
+state 40
+
+    (13) number -> number TIMES . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 60
+
+state 41
+
+    (14) number -> number DIVIDE . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 61
+
+state 42
+
+    (15) number -> number EXP . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 62
+
+state 43
+
+    (27) number -> LPAREN number . RPAREN
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    RPAREN          shift and go to state 55
+    PLUS            shift and go to state 39
+    MINUS           shift and go to state 38
+    TIMES           shift and go to state 40
+    DIVIDE          shift and go to state 41
+    EXP             shift and go to state 42
+
+
+state 44
+
+    (11) number -> number PLUS number .
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! reduce/reduce conflict for PLUS resolved using rule 11 (number -> number PLUS number .)
+  ! reduce/reduce conflict for MINUS resolved using rule 11 (number -> number PLUS number .)
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for EXP resolved as shift
+  ! reduce/reduce conflict for $end resolved using rule 11 (number -> number PLUS number .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 11 (number -> number PLUS number .)
+    PLUS            reduce using rule 11 (number -> number PLUS number .)
+    MINUS           reduce using rule 11 (number -> number PLUS number .)
+    $end            reduce using rule 11 (number -> number PLUS number .)
+    RPAREN          reduce using rule 11 (number -> number PLUS number .)
+    TIMES           shift and go to state 24
+    DIVIDE          shift and go to state 25
+    EXP             shift and go to state 26
+
+  ! TIMES           [ reduce using rule 11 (number -> number PLUS number .) ]
+  ! DIVIDE          [ reduce using rule 11 (number -> number PLUS number .) ]
+  ! EXP             [ reduce using rule 11 (number -> number PLUS number .) ]
+  ! PLUS            [ shift and go to state 22 ]
+  ! MINUS           [ shift and go to state 23 ]
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+  ! $end            [ reduce using rule 30 (atom -> number .) ]
+  ! RPAREN          [ reduce using rule 30 (atom -> number .) ]
+
+
+state 45
+
+    (21) atom -> number PLUS atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 21 (atom -> number PLUS atom .)
+    MINUS           reduce using rule 21 (atom -> number PLUS atom .)
+    $end            reduce using rule 21 (atom -> number PLUS atom .)
+    RPAREN          reduce using rule 21 (atom -> number PLUS atom .)
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    EXP             shift and go to state 19
+
+  ! TIMES           [ reduce using rule 21 (atom -> number PLUS atom .) ]
+  ! DIVIDE          [ reduce using rule 21 (atom -> number PLUS atom .) ]
+  ! EXP             [ reduce using rule 21 (atom -> number PLUS atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+
+
+state 46
+
+    (12) number -> number MINUS number .
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! reduce/reduce conflict for PLUS resolved using rule 12 (number -> number MINUS number .)
+  ! reduce/reduce conflict for MINUS resolved using rule 12 (number -> number MINUS number .)
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for EXP resolved as shift
+  ! reduce/reduce conflict for $end resolved using rule 12 (number -> number MINUS number .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 12 (number -> number MINUS number .)
+    PLUS            reduce using rule 12 (number -> number MINUS number .)
+    MINUS           reduce using rule 12 (number -> number MINUS number .)
+    $end            reduce using rule 12 (number -> number MINUS number .)
+    RPAREN          reduce using rule 12 (number -> number MINUS number .)
+    TIMES           shift and go to state 24
+    DIVIDE          shift and go to state 25
+    EXP             shift and go to state 26
+
+  ! TIMES           [ reduce using rule 12 (number -> number MINUS number .) ]
+  ! DIVIDE          [ reduce using rule 12 (number -> number MINUS number .) ]
+  ! EXP             [ reduce using rule 12 (number -> number MINUS number .) ]
+  ! PLUS            [ shift and go to state 22 ]
+  ! MINUS           [ shift and go to state 23 ]
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+  ! $end            [ reduce using rule 30 (atom -> number .) ]
+  ! RPAREN          [ reduce using rule 30 (atom -> number .) ]
+
+
+state 47
+
+    (22) atom -> number MINUS atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 22 (atom -> number MINUS atom .)
+    MINUS           reduce using rule 22 (atom -> number MINUS atom .)
+    $end            reduce using rule 22 (atom -> number MINUS atom .)
+    RPAREN          reduce using rule 22 (atom -> number MINUS atom .)
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    EXP             shift and go to state 19
+
+  ! TIMES           [ reduce using rule 22 (atom -> number MINUS atom .) ]
+  ! DIVIDE          [ reduce using rule 22 (atom -> number MINUS atom .) ]
+  ! EXP             [ reduce using rule 22 (atom -> number MINUS atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+
+
+state 48
+
+    (13) number -> number TIMES number .
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! reduce/reduce conflict for PLUS resolved using rule 13 (number -> number TIMES number .)
+  ! reduce/reduce conflict for MINUS resolved using rule 13 (number -> number TIMES number .)
+  ! reduce/reduce conflict for TIMES resolved using rule 13 (number -> number TIMES number .)
+  ! reduce/reduce conflict for DIVIDE resolved using rule 13 (number -> number TIMES number .)
+  ! shift/reduce conflict for EXP resolved as shift
+  ! reduce/reduce conflict for $end resolved using rule 13 (number -> number TIMES number .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 13 (number -> number TIMES number .)
+    PLUS            reduce using rule 13 (number -> number TIMES number .)
+    MINUS           reduce using rule 13 (number -> number TIMES number .)
+    TIMES           reduce using rule 13 (number -> number TIMES number .)
+    DIVIDE          reduce using rule 13 (number -> number TIMES number .)
+    $end            reduce using rule 13 (number -> number TIMES number .)
+    RPAREN          reduce using rule 13 (number -> number TIMES number .)
+    EXP             shift and go to state 26
+
+  ! EXP             [ reduce using rule 13 (number -> number TIMES number .) ]
+  ! PLUS            [ shift and go to state 22 ]
+  ! MINUS           [ shift and go to state 23 ]
+  ! TIMES           [ shift and go to state 24 ]
+  ! DIVIDE          [ shift and go to state 25 ]
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+  ! $end            [ reduce using rule 30 (atom -> number .) ]
+  ! RPAREN          [ reduce using rule 30 (atom -> number .) ]
+
+
+state 49
+
+    (23) atom -> number TIMES atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 23 (atom -> number TIMES atom .)
+    MINUS           reduce using rule 23 (atom -> number TIMES atom .)
+    TIMES           reduce using rule 23 (atom -> number TIMES atom .)
+    DIVIDE          reduce using rule 23 (atom -> number TIMES atom .)
+    $end            reduce using rule 23 (atom -> number TIMES atom .)
+    RPAREN          reduce using rule 23 (atom -> number TIMES atom .)
+    EXP             shift and go to state 19
+
+  ! EXP             [ reduce using rule 23 (atom -> number TIMES atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+
+
+state 50
+
+    (14) number -> number DIVIDE number .
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! reduce/reduce conflict for PLUS resolved using rule 14 (number -> number DIVIDE number .)
+  ! reduce/reduce conflict for MINUS resolved using rule 14 (number -> number DIVIDE number .)
+  ! reduce/reduce conflict for TIMES resolved using rule 14 (number -> number DIVIDE number .)
+  ! reduce/reduce conflict for DIVIDE resolved using rule 14 (number -> number DIVIDE number .)
+  ! shift/reduce conflict for EXP resolved as shift
+  ! reduce/reduce conflict for $end resolved using rule 14 (number -> number DIVIDE number .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 14 (number -> number DIVIDE number .)
+    PLUS            reduce using rule 14 (number -> number DIVIDE number .)
+    MINUS           reduce using rule 14 (number -> number DIVIDE number .)
+    TIMES           reduce using rule 14 (number -> number DIVIDE number .)
+    DIVIDE          reduce using rule 14 (number -> number DIVIDE number .)
+    $end            reduce using rule 14 (number -> number DIVIDE number .)
+    RPAREN          reduce using rule 14 (number -> number DIVIDE number .)
+    EXP             shift and go to state 26
+
+  ! EXP             [ reduce using rule 14 (number -> number DIVIDE number .) ]
+  ! PLUS            [ shift and go to state 22 ]
+  ! MINUS           [ shift and go to state 23 ]
+  ! TIMES           [ shift and go to state 24 ]
+  ! DIVIDE          [ shift and go to state 25 ]
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+  ! $end            [ reduce using rule 30 (atom -> number .) ]
+  ! RPAREN          [ reduce using rule 30 (atom -> number .) ]
+
+
+state 51
+
+    (24) atom -> number DIVIDE atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 24 (atom -> number DIVIDE atom .)
+    MINUS           reduce using rule 24 (atom -> number DIVIDE atom .)
+    TIMES           reduce using rule 24 (atom -> number DIVIDE atom .)
+    DIVIDE          reduce using rule 24 (atom -> number DIVIDE atom .)
+    $end            reduce using rule 24 (atom -> number DIVIDE atom .)
+    RPAREN          reduce using rule 24 (atom -> number DIVIDE atom .)
+    EXP             shift and go to state 19
+
+  ! EXP             [ reduce using rule 24 (atom -> number DIVIDE atom .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+
+
+state 52
+
+    (15) number -> number EXP number .
+    (21) atom -> number . PLUS atom
+    (22) atom -> number . MINUS atom
+    (23) atom -> number . TIMES atom
+    (24) atom -> number . DIVIDE atom
+    (25) atom -> number . EXP atom
+    (30) atom -> number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+  ! reduce/reduce conflict for PLUS resolved using rule 15 (number -> number EXP number .)
+  ! reduce/reduce conflict for MINUS resolved using rule 15 (number -> number EXP number .)
+  ! reduce/reduce conflict for TIMES resolved using rule 15 (number -> number EXP number .)
+  ! reduce/reduce conflict for DIVIDE resolved using rule 15 (number -> number EXP number .)
+  ! reduce/reduce conflict for EXP resolved using rule 15 (number -> number EXP number .)
+  ! reduce/reduce conflict for $end resolved using rule 15 (number -> number EXP number .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 15 (number -> number EXP number .)
+    PLUS            reduce using rule 15 (number -> number EXP number .)
+    MINUS           reduce using rule 15 (number -> number EXP number .)
+    TIMES           reduce using rule 15 (number -> number EXP number .)
+    DIVIDE          reduce using rule 15 (number -> number EXP number .)
+    EXP             reduce using rule 15 (number -> number EXP number .)
+    $end            reduce using rule 15 (number -> number EXP number .)
+    RPAREN          reduce using rule 15 (number -> number EXP number .)
+
+  ! PLUS            [ shift and go to state 22 ]
+  ! MINUS           [ shift and go to state 23 ]
+  ! TIMES           [ shift and go to state 24 ]
+  ! DIVIDE          [ shift and go to state 25 ]
+  ! EXP             [ shift and go to state 26 ]
+  ! PLUS            [ reduce using rule 30 (atom -> number .) ]
+  ! MINUS           [ reduce using rule 30 (atom -> number .) ]
+  ! TIMES           [ reduce using rule 30 (atom -> number .) ]
+  ! DIVIDE          [ reduce using rule 30 (atom -> number .) ]
+  ! EXP             [ reduce using rule 30 (atom -> number .) ]
+  ! $end            [ reduce using rule 30 (atom -> number .) ]
+  ! RPAREN          [ reduce using rule 30 (atom -> number .) ]
+
+
+state 53
+
+    (25) atom -> number EXP atom .
+    (16) atom -> atom . PLUS atom
+    (17) atom -> atom . MINUS atom
+    (18) atom -> atom . TIMES atom
+    (19) atom -> atom . DIVIDE atom
+    (20) atom -> atom . EXP atom
+
+    PLUS            reduce using rule 25 (atom -> number EXP atom .)
+    MINUS           reduce using rule 25 (atom -> number EXP atom .)
+    TIMES           reduce using rule 25 (atom -> number EXP atom .)
+    DIVIDE          reduce using rule 25 (atom -> number EXP atom .)
+    EXP             reduce using rule 25 (atom -> number EXP atom .)
+    $end            reduce using rule 25 (atom -> number EXP atom .)
+    RPAREN          reduce using rule 25 (atom -> number EXP atom .)
+
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! EXP             [ shift and go to state 19 ]
+
+
+state 54
+
+    (28) atom -> LPAREN atom RPAREN .
+
+    PLUS            reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+    MINUS           reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+    TIMES           reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+    DIVIDE          reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+    EXP             reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+    $end            reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+    RPAREN          reduce using rule 28 (atom -> LPAREN atom RPAREN .)
+
+
+state 55
+
+    (27) number -> LPAREN number RPAREN .
+
+    PLUS            reduce using rule 27 (number -> LPAREN number RPAREN .)
+    MINUS           reduce using rule 27 (number -> LPAREN number RPAREN .)
+    TIMES           reduce using rule 27 (number -> LPAREN number RPAREN .)
+    DIVIDE          reduce using rule 27 (number -> LPAREN number RPAREN .)
+    EXP             reduce using rule 27 (number -> LPAREN number RPAREN .)
+    $end            reduce using rule 27 (number -> LPAREN number RPAREN .)
+    RPAREN          reduce using rule 27 (number -> LPAREN number RPAREN .)
+    COMMA           reduce using rule 27 (number -> LPAREN number RPAREN .)
+
+
+state 56
+
+    (7) parameters -> LPAREN arglist RPAREN .
+
+    PLUS            reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+    MINUS           reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+    TIMES           reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+    DIVIDE          reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+    EXP             reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+    $end            reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+    RPAREN          reduce using rule 7 (parameters -> LPAREN arglist RPAREN .)
+
+
+state 57
+
+    (2) arglist -> arglist COMMA . NAME
+    (3) arglist -> arglist COMMA . number
+    (9) number -> . INTEGER
+    (10) number -> . FLOAT
+    (11) number -> . number PLUS number
+    (12) number -> . number MINUS number
+    (13) number -> . number TIMES number
+    (14) number -> . number DIVIDE number
+    (15) number -> . number EXP number
+    (26) number -> . MINUS number
+    (27) number -> . LPAREN number RPAREN
+
+    NAME            shift and go to state 63
+    INTEGER         shift and go to state 11
+    FLOAT           shift and go to state 12
+    MINUS           shift and go to state 6
+    LPAREN          shift and go to state 21
+
+    number                         shift and go to state 64
+
+state 58
+
+    (12) number -> number MINUS number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    PLUS            reduce using rule 12 (number -> number MINUS number .)
+    MINUS           reduce using rule 12 (number -> number MINUS number .)
+    $end            reduce using rule 12 (number -> number MINUS number .)
+    RPAREN          reduce using rule 12 (number -> number MINUS number .)
+    COMMA           reduce using rule 12 (number -> number MINUS number .)
+    TIMES           shift and go to state 40
+    DIVIDE          shift and go to state 41
+    EXP             shift and go to state 42
+
+  ! TIMES           [ reduce using rule 12 (number -> number MINUS number .) ]
+  ! DIVIDE          [ reduce using rule 12 (number -> number MINUS number .) ]
+  ! EXP             [ reduce using rule 12 (number -> number MINUS number .) ]
+  ! PLUS            [ shift and go to state 39 ]
+  ! MINUS           [ shift and go to state 38 ]
+
+
+state 59
+
+    (11) number -> number PLUS number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    PLUS            reduce using rule 11 (number -> number PLUS number .)
+    MINUS           reduce using rule 11 (number -> number PLUS number .)
+    $end            reduce using rule 11 (number -> number PLUS number .)
+    RPAREN          reduce using rule 11 (number -> number PLUS number .)
+    COMMA           reduce using rule 11 (number -> number PLUS number .)
+    TIMES           shift and go to state 40
+    DIVIDE          shift and go to state 41
+    EXP             shift and go to state 42
+
+  ! TIMES           [ reduce using rule 11 (number -> number PLUS number .) ]
+  ! DIVIDE          [ reduce using rule 11 (number -> number PLUS number .) ]
+  ! EXP             [ reduce using rule 11 (number -> number PLUS number .) ]
+  ! PLUS            [ shift and go to state 39 ]
+  ! MINUS           [ shift and go to state 38 ]
+
+
+state 60
+
+    (13) number -> number TIMES number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    PLUS            reduce using rule 13 (number -> number TIMES number .)
+    MINUS           reduce using rule 13 (number -> number TIMES number .)
+    TIMES           reduce using rule 13 (number -> number TIMES number .)
+    DIVIDE          reduce using rule 13 (number -> number TIMES number .)
+    $end            reduce using rule 13 (number -> number TIMES number .)
+    RPAREN          reduce using rule 13 (number -> number TIMES number .)
+    COMMA           reduce using rule 13 (number -> number TIMES number .)
+    EXP             shift and go to state 42
+
+  ! EXP             [ reduce using rule 13 (number -> number TIMES number .) ]
+  ! PLUS            [ shift and go to state 39 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! TIMES           [ shift and go to state 40 ]
+  ! DIVIDE          [ shift and go to state 41 ]
+
+
+state 61
+
+    (14) number -> number DIVIDE number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    PLUS            reduce using rule 14 (number -> number DIVIDE number .)
+    MINUS           reduce using rule 14 (number -> number DIVIDE number .)
+    TIMES           reduce using rule 14 (number -> number DIVIDE number .)
+    DIVIDE          reduce using rule 14 (number -> number DIVIDE number .)
+    $end            reduce using rule 14 (number -> number DIVIDE number .)
+    RPAREN          reduce using rule 14 (number -> number DIVIDE number .)
+    COMMA           reduce using rule 14 (number -> number DIVIDE number .)
+    EXP             shift and go to state 42
+
+  ! EXP             [ reduce using rule 14 (number -> number DIVIDE number .) ]
+  ! PLUS            [ shift and go to state 39 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! TIMES           [ shift and go to state 40 ]
+  ! DIVIDE          [ shift and go to state 41 ]
+
+
+state 62
+
+    (15) number -> number EXP number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    PLUS            reduce using rule 15 (number -> number EXP number .)
+    MINUS           reduce using rule 15 (number -> number EXP number .)
+    TIMES           reduce using rule 15 (number -> number EXP number .)
+    DIVIDE          reduce using rule 15 (number -> number EXP number .)
+    EXP             reduce using rule 15 (number -> number EXP number .)
+    $end            reduce using rule 15 (number -> number EXP number .)
+    RPAREN          reduce using rule 15 (number -> number EXP number .)
+    COMMA           reduce using rule 15 (number -> number EXP number .)
+
+  ! PLUS            [ shift and go to state 39 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! TIMES           [ shift and go to state 40 ]
+  ! DIVIDE          [ shift and go to state 41 ]
+  ! EXP             [ shift and go to state 42 ]
+
+
+state 63
+
+    (2) arglist -> arglist COMMA NAME .
+
+    RPAREN          reduce using rule 2 (arglist -> arglist COMMA NAME .)
+    COMMA           reduce using rule 2 (arglist -> arglist COMMA NAME .)
+
+
+state 64
+
+    (3) arglist -> arglist COMMA number .
+    (11) number -> number . PLUS number
+    (12) number -> number . MINUS number
+    (13) number -> number . TIMES number
+    (14) number -> number . DIVIDE number
+    (15) number -> number . EXP number
+
+    RPAREN          reduce using rule 3 (arglist -> arglist COMMA number .)
+    COMMA           reduce using rule 3 (arglist -> arglist COMMA number .)
+    PLUS            shift and go to state 39
+    MINUS           shift and go to state 38
+    TIMES           shift and go to state 40
+    DIVIDE          shift and go to state 41
+    EXP             shift and go to state 42
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for PLUS in state 7 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 7 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 7 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 7 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 7 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 28 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 28 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 28 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 28 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 28 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 28 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 44 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 44 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 44 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 46 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 46 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 46 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 48 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 50 resolved as shift
+WARNING: reduce/reduce conflict in state 44 resolved using rule (number -> number PLUS number)
+WARNING: rejected rule (atom -> number) in state 44
+WARNING: reduce/reduce conflict in state 46 resolved using rule (number -> number MINUS number)
+WARNING: rejected rule (atom -> number) in state 46
+WARNING: reduce/reduce conflict in state 48 resolved using rule (number -> number TIMES number)
+WARNING: rejected rule (atom -> number) in state 48
+WARNING: reduce/reduce conflict in state 50 resolved using rule (number -> number DIVIDE number)
+WARNING: rejected rule (atom -> number) in state 50
+WARNING: reduce/reduce conflict in state 52 resolved using rule (number -> number EXP number)
+WARNING: rejected rule (atom -> number) in state 52
