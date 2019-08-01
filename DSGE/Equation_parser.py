@@ -41,8 +41,10 @@ from numpy.random import normal
 #                        function tree
 #
 
+
 FUNCTIONS = {
-    'N': normal     #Normal law N(mu,sigma) from numpy
+    'N': normal,     #Normal law N(mu,sigma) from numpy
+    'LAG': 'LAG'
     }
 
 
@@ -54,7 +56,7 @@ LAMBDA_BINOP = {
     '**': lambda x, y : x ** y
     }
 
-def get_dependencies(tree,acc = []):
+def get_dependencies(tree,lagged,acc = []):
     """
     Description
     -----------
@@ -75,9 +77,17 @@ def get_dependencies(tree,acc = []):
         if type(tree[1]) == str:
             acc.append(tree[1])
     else:
+        if tree[0] == 'LAG':
+            lagged_value = tree[1][1]
+            lag = tree[2][1]
+            if lagged_value in lagged.keys():
+                lagged[lagged_value] = max(lag,lagged[lagged_value])
+            else:
+                lagged[lagged_value] = lag
+
         for t in tree[1:]:
             #Recursive loops over all arguments of the current branch of the tree
-            get_dependencies(t,acc)
+            get_dependencies(t,lagged,acc)
     return acc
 
 
@@ -149,6 +159,7 @@ class Econ_model_parser(Parser):
 
     variables = {}
     end_of_chain_variables = set()
+    lagged_variables = {}
 
     def get_parameters(self):
         return {p for p,f in self.variables.items() if f is None}
@@ -234,7 +245,7 @@ class Econ_model_parser(Parser):
         # When the line is a statement, get dependencies and
         # store the variable in the appropriate dict
         
-        dependencies = get_dependencies(p[3],[])
+        dependencies = get_dependencies(p[3],self.lagged_variables,[])
         
         if p[1] not in self.variables.keys():
             # Check if the variable has been defined and store it
@@ -252,8 +263,9 @@ class Econ_model_parser(Parser):
             #Add dependencies to main dict if necessary and remove from end_of_chain variable
             if d not in self.variables.keys():
                 self.variables[d] = None
-            elif d in self.end_of_chain_variables:
+            elif (d in self.end_of_chain_variables) and (d not in self.lagged_variables):
                 self.end_of_chain_variables.remove(d)
+
         
 
     def p_arglist(self,p):

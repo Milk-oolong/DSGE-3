@@ -40,16 +40,28 @@ def evaluate_function_tree(f_tree,kwargs):
         # If tree[0] is None, then it is either an variable argument
         # or a numeric argument
         if type(f_tree[1]) is str:
-            return kwargs[f_tree[1]]   #Return argument from kwargs
+            return kwargs[f_tree[1]].value   #Return argument from kwargs
         else:
             return f_tree[1]  # Return value (this is int or float)
+    elif f_tree[0] == 'LAG':
+        lagged_var = kwargs[f_tree[1][1]]
+        lag = f_tree[2][1]
+        return lagged_var.get_n_lagged(lag)
     else:
         # If tree is not none, then recursively apply to all arguments
         args = [evaluate_function_tree(elt,kwargs) for elt in f_tree[1:]]
         return f_tree[0](*args)
 
     
-def make_variable(variables,var_name,deps,fun_tree,final_list):
+def make_variable(
+        variables,
+        max_lags,
+        lagged_vars,
+        var_name,
+        deps,
+        fun_tree,
+        final_list,
+        addition_in_process = set()):
     """
     Description
     -----------
@@ -64,43 +76,71 @@ def make_variable(variables,var_name,deps,fun_tree,final_list):
     * fun_tree: function tree of the Variable instance to create
     * final_list: list of all Variable and Parameter instances
     """
+    in_process = addition_in_process.copy()
     dep_list = set()      # Used to store Variable and Parameter instances used to instanciate the Variable to create
     for d in deps:
         if d in final_list.keys():
             # If dep already exists, retrieve it and add it to the list
             dep_list.add(final_list[d])
-        else:
+        elif not d == var_name:
             # Else, create it and add it to the list
             new_name = d
             new_deps = variables[d]['dependencies']
             new_fun = variables[d]['function']
-            new_var = make_variable(variables, new_name, new_deps, new_fun, final_list)
+            new_var = make_variable(
+                variables,
+                max_lags,
+                lagged_vars,
+                new_name,
+                new_deps,
+                new_fun,
+                final_list,
+                in_process)
             final_list[d] = new_var
             dep_list.add(new_var)
-    return Variable(var_name,fun_tree,dep_list)
+    tmp_var = Variable(var_name,fun_tree,dep_list)
+    if var_name in max_lags:
+        lag = max_lags[var_name]
+        tmp_var._make_lag(lag,var_name,final_list)
+        lagged_vars[var_name] = tmp_var
+    return tmp_var
 
     
-def make_equations(variables,eoc_variables,parameters):
+def make_equations(variables,eoc_variables,parameters,max_lags):
     # Create dict storing subsets of Variable and Parameter instances
     # used in the simulation
-    all_vars = {}   # Store all Variable and Parameter instances
-    eoc_vars = {}   # Store only end of chain Variable instances
-    params = {}     # Sotre only parameters
+    all_vars = {}     # Store all Variable and Parameter instances
+    eoc_vars = {}     # Store only end of chain Variable instances
+    params = {}       # Store only parameters
+    lagged_vars = {}  # Store variables with lag
     for p in parameters:
         #First create Parameter instances
         param_object = Parameter(p,np.nan)
         params[p] = param_object
         all_vars[p] = param_object
+    for v_name,lag in max_lags.items():
+        for i in range(int(lag)):
+            param_name = v_name + '_t_minus_' + str(i+1)
+            param_object = Parameter(param_name,np.nan)
+            params[param_name] = param_object
+            all_vars[param_name] = param_object
     for var_name, data in eoc_variables.items():
         # Then create Variable instance
         # This is done recursively from end of chain Variable instances
         deps = data['dependencies']
         fun = data['function']
-        tmp_var = make_variable(variables,var_name,deps,fun,all_vars)
+        tmp_var = make_variable(
+            variables,
+            max_lags,
+            lagged_vars,
+            var_name,
+            deps,
+            fun,
+            all_vars)
         all_vars[var_name] = tmp_var
         eoc_vars[var_name] = tmp_var
     # return as tuple
-    return (all_vars,eoc_vars,params)
+    return (all_vars,eoc_vars,params,lagged_vars)
         
 class Computable:
     """
@@ -118,7 +158,7 @@ class Computable:
         return '{} = {}'.format(self.name,self.value)
 
     def __hash__(self):
-        a = hashlib.md5(self.name.encode())
+        a = hashlib.sha1(self.name.encode())
         b = a.hexdigest()
         return int(b, 16)
 
@@ -148,14 +188,79 @@ class Variable(Computable):
         Computable.__init__(self,name)
         self.fun_tree = fun_tree
         self.deps = deps
+        self.lag = None
 
     def __call__(self):
         for dep in self.deps:
             dep()
-        kwargs = {dep.name: dep.value for dep in self.deps}
+        kwargs = {dep.name: dep for dep in self.deps}
+        #The next line is here for var such as: Y = LAG(Y,1)
+        kwargs[self.name] = self
         self._value = evaluate_function_tree(self.fun_tree,kwargs)
         return self.value
 
+    def _make_lag(self,n_iter,v_name,variables):
+        # Assume that variables already includes the parameters defining
+        # the init values
+        if self.lag is not None:
+            lag_var, c_lag = self.lag
+            param_name = v_name + '_t_minus_' + str(c_lag+1)
+            if lag_var is None:
+                lag_var = Lagged_variable(
+                    v_name,
+                    c_lag + 1,
+                    variables[param_name]
+                )
+        else:
+            c_lag = 0
+            param_name = v_name + '_t_minus_' + str(c_lag+1)
+            lag_var = Lagged_variable(
+                v_name,
+                c_lag + 1,
+                variables[param_name]
+            )
+        self.lag = (lag_var,c_lag)
+        if not (n_iter == 1):
+            lag_var._make_lag(n_iter-1,lag_var.main_var_name,variables)
+
+    def get_lagged(self):
+        if self.lag is None:
+            return None
+        else:
+            lag_var, c_lag = self.lag
+            return lag_var
+
+    def get_n_lagged(self,i_iter):
+        if i_iter == 1:
+            return self.get_lagged().value
+        else:
+            lagged_var, c = self.lag
+            return lagged_var.get_n_lagged(i_iter - 1)
+            
+
+class Lagged_variable(Variable):
+
+    def __init__(self,var_name,lag,param_object):
+        lag_name = 'LAG_' + str(lag) + '_' + var_name
+        Variable.__init__(self,lag_name,None,None)
+        self.main_var_name = var_name
+        self.lag = (None,lag)
+        self._init_param = param_object
+
+    def __call__(self):
+        return self.value
+
+    def _make_lag(self,n_iter,v_name,variables):
+        Variable._make_lag(self,n_iter,self.main_var_name,variables)
+        lag_obj, lag = self.lag
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self,v):
+        self._value = v
 
 class Parameter(Computable):
 

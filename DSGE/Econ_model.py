@@ -1,5 +1,6 @@
 from os.path import isfile
 import json
+import numpy as np
 
 from DSGE.Equation_parser import Econ_model_parser
 from DSGE.Computation import make_equations
@@ -60,6 +61,7 @@ class Econ_model:
             for v,d in self.results.items():
                 d[i] = []
             for j in range(n_iteration):
+                self._shift_lagged_variables(j)
                 self._compute_variables()
                 self._store_iteration_results(i)
             self._store_simulation_results()
@@ -75,15 +77,18 @@ class Econ_model:
             for line in f:
                 parser.run(line)
 
-        all_vars,eoc,param = make_equations(
+        all_vars,eoc,param,lags = make_equations(
             parser.variables,
             parser.get_end_of_chain_variables(),
-            parser.get_parameters()
+            parser.get_parameters(),
+            parser.lagged_variables
             )
+
 
         self.parameter_objects = param
         self.end_of_chain_variables = eoc
         self.all_variables = all_vars
+        self.lagged_variables = lags
         self.results = {name:{} for name in self.all_variables.keys()}
         
 
@@ -91,10 +96,27 @@ class Econ_model:
         for p,v in self.model_parameters.items():
             self.all_variables[p].value = v
 
+    def _shift_lagged_variables(self,j):
+            for var_name, var_obj in self.lagged_variables.items():
+                if j == 0:
+                    lag_obj = var_obj.get_lagged()
+                    while lag_obj is not None:
+                        lag_obj.value = lag_obj._init_param.value
+                        lag_obj = lag_obj.get_lagged()
+                else:
+                    v_push = var_obj.value
+                    lag_obj = var_obj.get_lagged()
+                    while lag_obj is not None:
+                        _ = lag_obj.value
+                        lag_obj.value = v_push
+                        v_push = _
+                        lag_obj = lag_obj.get_lagged()
+                
+
     def _compute_variables(self):
         for v in self.end_of_chain_variables.values():
             v()
-
+            
     def _store_iteration_results(self,simulation):
         for name,v in self.all_variables.items():
             self.results[name][simulation].append(v.value)
