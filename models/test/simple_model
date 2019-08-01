@@ -1,4 +1,3 @@
-k = ((A*alpha)/(delta+theta))**(1/(1-alpha))
-c = k*(delta*(1-alpha)+theta)/alpha
-y = c + delta * k
-F = A * k ** alpha
+dY = Y/LAG(Y,1)-1.0
+epsilon = N(mu,sigma)
+Y = LAG(Y,1)*(1+epsilon)
