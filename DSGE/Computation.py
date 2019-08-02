@@ -14,7 +14,12 @@ import hashlib
 ########################################################################
 # TO DO
 #
-#
+# /!\ Solve warning in make_variable function
+# Improve naming convention of lagged value
+# For now, get_n_lagged is call when evaluating variable. Probably more
+#     efficient if stored before. Should think about solution
+# Improve _make_lag
+#     e.g. self.lag = (None,0) would make sense
 #
 
 ########################################################################
@@ -40,10 +45,12 @@ def evaluate_function_tree(f_tree,kwargs):
         # If tree[0] is None, then it is either an variable argument
         # or a numeric argument
         if type(f_tree[1]) is str:
-            return kwargs[f_tree[1]].value   #Return argument from kwargs
+            return kwargs[f_tree[1]].value  #Return argument from kwargs
         else:
             return f_tree[1]  # Return value (this is int or float)
     elif f_tree[0] == 'LAG':
+        # If tree[1] is 'LAG', then the value stored in the lagged
+        # variable instance should be returned
         lagged_var = kwargs[f_tree[1][1]]
         lag = f_tree[2][1]
         return lagged_var.get_n_lagged(lag)
@@ -53,15 +60,14 @@ def evaluate_function_tree(f_tree,kwargs):
         return f_tree[0](*args)
 
     
-def make_variable(
-        variables,
-        max_lags,
-        lagged_vars,
-        var_name,
-        deps,
-        fun_tree,
-        final_list,
-        addition_in_process = set()):
+def make_variable(variables,
+                  max_lags,
+                  lagged_vars,
+                  var_name,
+                  deps,
+                  fun_tree,
+                  final_list
+):
     """
     Description
     -----------
@@ -72,11 +78,13 @@ def make_variable(
     Arguments
     ---------
     * variables: dict with the following form: {var_name: {'dependencies':dep_list,'function':fun_tree}}
+    * max_lags: dict of maximum lag: {'var_name': lag}
+    * lagged_var: dict of lagged Variable instances (byref)
     * var_name: name of the Variable instance to create
+    * deps: list of dependencies (str)
     * fun_tree: function tree of the Variable instance to create
     * final_list: list of all Variable and Parameter instances
     """
-    in_process = addition_in_process.copy()
     dep_list = set()      # Used to store Variable and Parameter instances used to instanciate the Variable to create
     for d in deps:
         if d in final_list.keys():
@@ -84,9 +92,20 @@ def make_variable(
             dep_list.add(final_list[d])
         elif not d == var_name:
             # Else, create it and add it to the list
+            #######################################
+            #   /!\ WARNING /!\   /!\ WARNING /!\
+            ######################################
+            # elif not d == var_name
+            # solves recursivity problems for
+            # Y = LAG(Y,1)
+            # But does not solve:
+            # Y = LAG(X,1)
+            # X = LAG(Y,1)
+            #######################################
             new_name = d
             new_deps = variables[d]['dependencies']
             new_fun = variables[d]['function']
+            # make new Variable instance (RECURSIVITY)
             new_var = make_variable(
                 variables,
                 max_lags,
@@ -94,12 +113,16 @@ def make_variable(
                 new_name,
                 new_deps,
                 new_fun,
-                final_list,
-                in_process)
+                final_list)
+            # Add dependency to the final list
             final_list[d] = new_var
+            # Add dependency Variable instance to dependency list
             dep_list.add(new_var)
+    # Create new Variable instance
     tmp_var = Variable(var_name,fun_tree,dep_list)
     if var_name in max_lags:
+        # If variables rely on lagged values from var_name, then
+        # run _make_lag method with max_lag as argument
         lag = max_lags[var_name]
         tmp_var._make_lag(lag,var_name,final_list)
         lagged_vars[var_name] = tmp_var
@@ -119,7 +142,10 @@ def make_equations(variables,eoc_variables,parameters,max_lags):
         params[p] = param_object
         all_vars[p] = param_object
     for v_name,lag in max_lags.items():
+        # Then add initial value of lagged parameter to params
         for i in range(int(lag)):
+            # Initial parameters for lagged values are named this way:
+            # e.g.: LAG(B,2) => B_t_minus_2
             param_name = v_name + '_t_minus_' + str(i+1)
             param_object = Parameter(param_name,np.nan)
             params[param_name] = param_object
@@ -200,18 +226,25 @@ class Variable(Computable):
         return self.value
 
     def _make_lag(self,n_iter,v_name,variables):
+        # Creates and store a Lagged_variable instance
         # Assume that variables already includes the parameters defining
         # the init values
         if self.lag is not None:
+            # If either the variable is lagged,
+            # or is not lagged but has a lagged value
             lag_var, c_lag = self.lag
             param_name = v_name + '_t_minus_' + str(c_lag+1)
             if lag_var is None:
+                # /!\ lag_var should not be not None.
+                # To check and improve
                 lag_var = Lagged_variable(
                     v_name,
                     c_lag + 1,
-                    variables[param_name]
-                )
+                    variables[param_name])
         else:
+            # If self.lag is None, then we are calling from the initial
+            # variable. current lag = 0 and we need to create a new
+            # Lagged_variable instance
             c_lag = 0
             param_name = v_name + '_t_minus_' + str(c_lag+1)
             lag_var = Lagged_variable(
@@ -221,9 +254,13 @@ class Variable(Computable):
             )
         self.lag = (lag_var,c_lag)
         if not (n_iter == 1):
+            # If n_iter > 1, we recursively add lag
             lag_var._make_lag(n_iter-1,lag_var.main_var_name,variables)
 
     def get_lagged(self):
+        """
+        Returns the lagged variable from the original variable
+        """
         if self.lag is None:
             return None
         else:
@@ -231,6 +268,10 @@ class Variable(Computable):
             return lag_var
 
     def get_n_lagged(self,i_iter):
+        """
+        Returns the n-lagged variable from the original variable
+        If there is less than n-lagged variables, then raise an exception
+        """
         if i_iter == 1:
             return self.get_lagged().value
         else:
