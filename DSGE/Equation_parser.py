@@ -13,7 +13,7 @@ from numpy.random import normal
 ########################################################################
 # TO DO LIST
 #
-# Add lag operator (complicated to add, but important)
+# See warning in p_statement function and solve it
 # Add a uminus rules for atom
 #       For the moment, only exists for number
 # Add new functions (e.g. exp, log) from numpy (easy to do)
@@ -26,7 +26,9 @@ from numpy.random import normal
 #       2+A won't parse otherwise
 # Add reconciliation rules for variables defined twice
 #       e.g. what to do if parsing Y=A and Y=B?
-#
+# Add a check to make sure that LAG(x,y) accepts only (str,int>1) args
+# Improve the consistency of value retrieval from parser
+#       e.g. for now, we have get_parameter(), but variables as attr
 
 
 ########################################################################
@@ -43,8 +45,8 @@ from numpy.random import normal
 
 
 FUNCTIONS = {
-    'N': normal,     #Normal law N(mu,sigma) from numpy
-    'LAG': 'LAG'
+    'N': normal,     # Normal law N(mu,sigma) from numpy
+    'LAG': 'LAG'     # Lag operator LAG(var,lag) where lag > 1
     }
 
 
@@ -60,11 +62,14 @@ def get_dependencies(tree,lagged,acc = []):
     """
     Description
     -----------
-    Takes a function tree from and returns a list of its arguments through a recursive loop
+    Takes a function tree from and
+    1) returns a list of its arguments through a recursive loop
+    2) add (byref) the max lagged find for variables in a dict
 
     Arguments
     ---------
     * tree: A function tree
+    * lagged: Dictionary of variables with lag {var_name: lag}
     * acc: Accumulator used to store arguments during recursive loops
 
     Returns
@@ -73,18 +78,21 @@ def get_dependencies(tree,lagged,acc = []):
     
     """
     if tree[0] is None:
-        #If tree is none, then the 2nd element is either a variable argument (str) or a numeric argument. We only retrieve str here
+        # If tree[0] is none, then the 2nd element is either a variable argument (str) or a numeric argument. We only retrieve str here
         if type(tree[1]) == str:
             acc.append(tree[1])
     else:
+        # If tree[0] is not None, it can either be a function or 'LAG'
         if tree[0] == 'LAG':
+            # If 'LAG', add to lagged dict
             lagged_value = tree[1][1]
             lag = tree[2][1]
             if lagged_value in lagged.keys():
+                # If the key already exists, add the max value
                 lagged[lagged_value] = max(lag,lagged[lagged_value])
             else:
+                # Else, add new key to lagged
                 lagged[lagged_value] = lag
-
         for t in tree[1:]:
             #Recursive loops over all arguments of the current branch of the tree
             get_dependencies(t,lagged,acc)
@@ -155,13 +163,26 @@ class Econ_model_parser(Parser):
 ########################################################################
 # VARIABLES STORAGE DECLARATION
 #
+# These variables are the main output of the parser. They have the 
+# following form:
+# 
+# * variables: {'var_name',fun_tree]
+# * end_of_chain_variables: 
+#       in Econ_model_parser: {var_name}
+#       in get_... method: {'var_name':
+#                                  {'function': fun_tree,
+#                                   'dependencies': dep_list}}
+# * lagged_variables: {'var_name': lag}
+# * get_parameters(): {var_name}
 #
 
-    variables = {}
-    end_of_chain_variables = set()
-    lagged_variables = {}
+    variables = {}                   # dict of all variables
+    end_of_chain_variables = set()   # set of end of chain variables
+    lagged_variables = {}            # dict of lagged variables
 
     def get_parameters(self):
+        # If a variable is defined with no fun_tree, then it is a
+        # parameter
         return {p for p,f in self.variables.items() if f is None}
 
     def get_end_of_chain_variables(self):
@@ -244,7 +265,9 @@ class Econ_model_parser(Parser):
         """statement : NAME EQUALS atom"""
         # When the line is a statement, get dependencies and
         # store the variable in the appropriate dict
-        
+
+        # Retrieve dependencies and add dependant lagged variables to
+        # the lagged_variables dict
         dependencies = get_dependencies(p[3],self.lagged_variables,[])
         
         if p[1] not in self.variables.keys():
@@ -260,10 +283,28 @@ class Econ_model_parser(Parser):
             'dependencies': dependencies.copy()
         }
         for d in dependencies:
-            #Add dependencies to main dict if necessary and remove from end_of_chain variable
+            # If d is in dependencies, then it is either a variable
+            # defined through a statement or a variable already added
             if d not in self.variables.keys():
+                # If it is not in dependencies, we add it with a
+                # fun_tree equal to None
                 self.variables[d] = None
             elif (d in self.end_of_chain_variables) and (d not in self.lagged_variables):
+                # A dependency cannot be a end of chain, so we
+                # remove it
+                ##############################################
+                # /!\ WARNING
+                #
+                # In a case such as:
+                # t = LAG(t,1)
+                # y = t
+                #
+                # Both y and t are designated as end_of_chain
+                # variables. This does not prevent from
+                # running the computation, but it may become
+                # a serious computation time issue later
+                #
+                ##############################################
                 self.end_of_chain_variables.remove(d)
 
         
