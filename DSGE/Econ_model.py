@@ -17,6 +17,8 @@ from DSGE.Computation import make_equations
 ########################################################################
 # TO DO LIST
 #
+# Creates an iterable methods for Variable instances in Computation
+#    and use it here when flipping the lagged values
 # Allow different types of inputs for model, parameters
 #    Should allow to add string directly or split between multiple files
 # Remove storage of parameter and variable descriptions from
@@ -84,7 +86,6 @@ class Econ_model:
             parser.lagged_variables
             )
 
-
         self.parameter_objects = param
         self.end_of_chain_variables = eoc
         self.all_variables = all_vars
@@ -97,13 +98,20 @@ class Econ_model:
             self.all_variables[p].value = v
 
     def _shift_lagged_variables(self,j):
+        # When j == 0, assign the initial parameter value
+        # When j > 0, push the variable value to the lagged value
+        
             for var_name, var_obj in self.lagged_variables.items():
                 if j == 0:
+                    # For each lagged variables, retrieve the initial
+                    # value and set it as current value
                     lag_obj = var_obj.get_lagged()
                     while lag_obj is not None:
                         lag_obj.value = lag_obj._init_param.value
                         lag_obj = lag_obj.get_lagged()
                 else:
+                    # For each lagged variable, push the current value
+                    # to the next value recursively
                     v_push = var_obj.value
                     lag_obj = var_obj.get_lagged()
                     while lag_obj is not None:
