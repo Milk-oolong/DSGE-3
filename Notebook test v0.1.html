@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>.ipynb</title>
+<title>Notebook test v0.1</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13207,7 +13207,7 @@ $$</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">DSGE.Econ_model</span> <span class="k">import</span> <span class="n">Econ_model</span>
@@ -13239,7 +13239,7 @@ $$</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">var_file</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">getcwd</span><span class="p">(),</span><span class="s1">&#39;models/V0.1/variables_v0.1&#39;</span><span class="p">)</span>
@@ -13289,11 +13289,11 @@ F = A * k ** alpha
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_file</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">getcwd</span><span class="p">(),</span><span class="s1">&#39;models/V0.1/parameters_v0.1&#39;</span><span class="p">)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">var_file</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">param_file</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 </pre></div>
@@ -13312,13 +13312,7 @@ F = A * k ** alpha
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>k = ((A*alpha)/(delta+theta))**(1/(1-alpha))
-
-c = k*(delta*(1-alpha)+theta)/alpha
-
-y = c + delta * k
-
-F = A * k ** alpha
+<pre>{&#34;A&#34;:1,&#34;alpha&#34;:0.3,&#34;theta&#34;:0.05,&#34;delta&#34;:0.12}
 
 </pre>
 </div>
@@ -13342,7 +13336,7 @@ F = A * k ** alpha
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Instanciation of the model</span>
@@ -13376,7 +13370,7 @@ F = A * k ** alpha
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tmp_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -13393,7 +13387,7 @@ F = A * k ** alpha
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[41]:</div>
+    <div class="prompt output_prompt">Out[5]:</div>
 
 
 
@@ -13416,26 +13410,26 @@ F = A * k ** alpha
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>theta</th>
-      <th>alpha</th>
       <th>A</th>
+      <th>theta</th>
       <th>delta</th>
+      <th>alpha</th>
       <th>k</th>
+      <th>F</th>
       <th>c</th>
       <th>y</th>
-      <th>F</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>results</th>
-      <td>0.05</td>
-      <td>0.3</td>
       <td>1</td>
+      <td>0.05</td>
       <td>0.12</td>
+      <td>0.3</td>
       <td>2.25107</td>
-      <td>1.005478</td>
       <td>1.275606</td>
+      <td>1.005478</td>
       <td>1.275606</td>
     </tr>
   </tbody>
